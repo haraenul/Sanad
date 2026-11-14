@@ -51,7 +51,7 @@ textarea{width:100%;box-sizing:border-box;min-height:90px;background:var(--card)
 #done{align-items:center;justify-content:center;text-align:center}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 #cs{position:fixed;inset:0;z-index:6;display:flex;align-items:flex-end;background:rgba(0,0,0,.6);visibility:hidden}#cs.on{visibility:visible}
-.pv{width:100%;border-radius:16px;background:#000;max-height:32vh;object-fit:cover;margin:8px 0}
+.pv{width:100%;border-radius:16px;background:#000;max-height:32vh;object-fit:contain;margin:8px 0}
 </style></head><body>
 
 <section class="v on" id="home"><div class="wrap">
@@ -216,7 +216,7 @@ $('#goS').onclick=()=>{drawSet();show('set')};
 $('#setB').onclick=()=>st&&false?0:home();
 
 /* camera mode: on-device pose estimation (MediaPipe), side view. Detects sujood = head clearly below hips, then calls the same mark() as a tap */
-const cam={on:false,n:0,face:'user',lm:null,s:'u',a:0,b:0,stream:null,raf:0,t:0,ok:false,iv:0};
+const cam={test:false,tc:0,m:0,on:false,n:0,face:'user',lm:null,s:'u',a:0,b:0,stream:null,raf:0,t:0,ok:false,iv:0};
 const camMsg=t=>$('#cm').textContent=t,KP=[0,11,12,23,24];
 async function camInit(){
  if(cam.lm)return;const V='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
@@ -228,26 +228,36 @@ async function camStream(){
  const v=$('#cv');cam.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:cam.face,width:640,height:480},audio:false});
  v.srcObject=cam.stream;await v.play();
 }
+function camStep(m,now){
+ if(cam.s=='u'){if(m>.2){cam.a=cam.a||now;if(now-cam.a>300){cam.s='d';cam.a=cam.b=0;return true}}else cam.a=0}
+ else{if(m<.1){cam.b=cam.b||now;if(now-cam.b>300){cam.s='u';cam.a=cam.b=0}}else cam.b=0}
+ return false;
+}
 function camLoop(){
  cam.raf=requestAnimationFrame(camLoop);const v=$('#cv'),now=performance.now();
  if(now-cam.t<100||v.readyState<2||!cam.lm)return;cam.t=now;
  let p;try{p=cam.lm.detectForVideo(v,now).landmarks[0]}catch(e){return}
- cam.ok=!!p&&KP.every(i=>p[i].visibility>.5);if(!cam.ok||!cam.on)return;
- const mx=(a,b,k)=>(p[a][k]+p[b][k])/2,T=Math.hypot(mx(11,12,'x')-mx(23,24,'x'),mx(11,12,'y')-mx(23,24,'y'))||1,m=(p[0].y-mx(23,24,'y'))/T;
- if(cam.s=='u'){if(m>.25){cam.a=cam.a||now;if(now-cam.a>300){cam.s='d';cam.a=cam.b=0;cam.n++;if(st&&(st.g==2||cam.n%2==0))mark(true)}}else cam.a=0}
- else{if(m<.05){cam.b=cam.b||now;if(now-cam.b>300){cam.s='u';cam.a=cam.b=0}}else cam.b=0}
+ cam.ok=false;if(!p)return;
+ /* side view: use whichever side of the body the camera sees best */
+ const sd=[[11,23,7],[12,24,8]].map(a=>({s:p[a[0]],h:p[a[1]],e:p[a[2]],q:Math.min(p[a[0]].visibility,p[a[1]].visibility)})).sort((a,b)=>b.q-a.q)[0];
+ const hd=p[0].visibility>.3?p[0]:sd.e.visibility>.3?sd.e:null;
+ const T=Math.hypot(sd.s.x-sd.h.x,sd.s.y-sd.h.y);
+ if(sd.q<.3||!hd||T<.04)return;cam.ok=true;
+ const m=(hd.y-sd.h.y)/T;cam.m=m;
+ if(!cam.on&&!cam.test)return;
+ if(camStep(m,now)){if(cam.on){cam.n++;if(st&&(st.g==2||cam.n%2==0))mark(true)}else cam.tc++}
 }
 async function camSetup(){
- $('#cs').classList.add('on');camMsg('جارٍ تهيئة الكاميرا… (أول مرة تحتاج إنترنت)');cam.on=false;
+ $('#cs').classList.add('on');camMsg('جارٍ تهيئة الكاميرا… (أول مرة تحتاج إنترنت)');cam.on=false;cam.test=true;cam.tc=0;cam.s='u';
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){camMsg('المتصفح يمنع الكاميرا في هذا النوع من الصفحات. افتحي الصفحة عبر رابط https أو عبر localhost. يمكنكِ المتابعة باللمس.');return}
  let step='m';
  try{await camInit();step='c';await camStream();cancelAnimationFrame(cam.raf);camLoop();clearInterval(cam.iv);
-  cam.iv=setInterval(()=>camMsg(cam.ok?'أراكِ بوضوح ✓':'لا يظهر جسمكِ كاملًا من الجانب بعد؛ حرّكي الهاتف أو ابتعدي قليلًا'),500)}
+  cam.iv=setInterval(()=>camMsg(cam.ok?'أراكِ ✓ · القياس '+cam.m.toFixed(2)+' · '+(cam.s=='d'?'ساجدة':'غير ساجدة')+' · سجدات رُصدت في التجربة: '+n2a(cam.tc)+'. جرّبي الآن: قفي ثم اسجدي وانهضي، وانظري هل يزيد العدّاد.':'لا أراكِ بعد؛ يلزم أن يظهر رأسكِ وكتفكِ ووركِ من الجانب. ابتعدي قليلًا أو زيدي الإضاءة.'),500)}
  catch(e){const n=e&&e.name||'',d=' ('+n+(e&&e.message?': '+String(e.message).slice(0,90):'')+')';
   camMsg((step=='m'?'تعذّر تحميل نموذج التعرّف؛ تأكدي من الإنترنت ومن أن المتصفح لا يحجب cdn.jsdelivr.net وstorage.googleapis.com.':n=='NotAllowedError'?'لم يُسمح باستخدام الكاميرا. اسمحي بها من أيقونة القفل بجانب العنوان ثم أعيدي المحاولة.':n=='NotFoundError'?'لم أجد كاميرا في هذا الجهاز.':n=='NotReadableError'?'الكاميرا مستخدمة في تطبيق آخر.':'تعذّر تشغيل الكاميرا.')+d+' يمكنكِ المتابعة باللمس.')}
 }
-function camStop(){cancelAnimationFrame(cam.raf);clearInterval(cam.iv);cam.on=false;cam.n=0;if(cam.stream){cam.stream.getTracks().forEach(t=>t.stop());cam.stream=null}$('#cs').classList.remove('on')}
-$('#cgo2').onclick=()=>{if(!cam.stream)return;cam.on=true;cam.s='u';cam.n=0;clearInterval(cam.iv);$('#cs').classList.remove('on')};
+function camStop(){cam.test=false;cancelAnimationFrame(cam.raf);clearInterval(cam.iv);cam.on=false;cam.n=0;if(cam.stream){cam.stream.getTracks().forEach(t=>t.stop());cam.stream=null}$('#cs').classList.remove('on')}
+$('#cgo2').onclick=()=>{if(!cam.stream)return;cam.test=false;cam.on=true;cam.s='u';cam.n=0;clearInterval(cam.iv);$('#cs').classList.remove('on')};
 $('#cno').onclick=camStop;
 $('#csw').onclick=async()=>{cam.face=cam.face=='user'?'environment':'user';try{await camStream()}catch(e){camMsg('تعذّر تبديل الكاميرا')}};
 
