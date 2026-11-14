@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سَنَد — رفيقكِ في الصلاة</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3eee1;--fg:#1e2a26;--mut:#62726b;--gold:#8f6b1f;--glow:rgba(143,107,31,.2);--line:rgba(30,42,38,.16);--card:rgba(30,42,38,.05);--fs:1;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0c1412;--fg:#e9e3d2;--mut:#93a39b;--gold:#d9b66b;--glow:rgba(217,182,107,.17);--line:rgba(233,227,210,.16);--card:rgba(233,227,210,.06);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0c1412;--fg:#e9e3d2;--mut:#93a39b;--gold:#d9b66b;--glow:rgba(217,182,107,.17);--line:rgba(233,227,210,.16);--card:rgba(233,227,210,.06);color-scheme:dark}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font:400 calc(17px*var(--fs))/1.8 'Noto Naskh Arabic','Amiri',serif;-webkit-tap-highlight-color:transparent;overflow:hidden}
+.v{display:none;height:100%;flex-direction:column;overflow-y:auto}.v.on{display:flex}
+h1,h2,h3{font-family:Amiri,serif;margin:0;font-weight:700}
+.btn{background:none;border:1px solid var(--line);color:var(--fg);padding:10px 18px;border-radius:14px;font:inherit;cursor:pointer;min-height:46px}
+.btn.p{background:var(--gold);border-color:var(--gold);color:var(--bg);font-weight:600}
+.btn:focus-visible,#stage:focus-visible,.tg:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.m{color:var(--mut);font-size:.88em}
+.wrap{padding:22px 22px 30px;max-width:520px;width:100%;margin:0 auto;box-sizing:border-box}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.pr{border:1px solid var(--line);background:var(--card);border-radius:18px 18px 10px 10px;padding:14px 8px;text-align:center;color:var(--fg);font:inherit;cursor:pointer}
+.pr b{display:block;font:700 1.35em Amiri,serif;color:var(--gold)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0}
+.card{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:14px 16px;margin:14px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;transition:opacity 1s}
+.strip{display:flex;gap:9px;justify-content:center;padding:6px 14px;transition:opacity 1s}
+.mini{width:20px;height:28px;border:1.5px solid var(--gold);border-radius:99px 99px 4px 4px;opacity:.45;transition:.6s}
+.mini.d{background:var(--gold);opacity:1}.mini.c{opacity:1;box-shadow:0 0 12px var(--glow)}
+#stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;touch-action:manipulation;cursor:pointer;text-align:center;padding:0 24px}
+.arch{position:relative;width:min(54vw,230px);aspect-ratio:4/5;max-height:42vh;border:1.5px solid var(--gold);border-radius:999px 999px 22px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 28%,var(--glow),transparent 72%);box-shadow:0 0 46px var(--glow);transition:transform .3s,opacity 1s}
+.arch:before{content:"";position:absolute;inset:8px;border:1px solid var(--line);border-radius:inherit}
+.arch.arr{animation:arr .8s ease}
+@keyframes arr{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+#stage:active .arch{transform:scale(.985)}
+#num{font:700 clamp(64px,11vh,96px)/1 Amiri,serif;color:var(--gold)}
+#ord{font:600 1.15em Amiri,serif;margin-top:6px}
+.dots{display:flex;gap:30px;margin-top:26px}
+.dot{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--gold);transition:background .6s,box-shadow .6s}
+.dot.f{background:var(--gold);box-shadow:0 0 24px var(--glow);animation:pop .5s}
+@keyframes pop{50%{transform:scale(1.18)}}
+.dl{display:flex;gap:30px;margin-top:6px}.dl span{width:44px;text-align:center}
+#cue{min-height:3.6em;margin-top:14px;color:var(--mut);max-width:320px;font-size:.95em}
+body.dim .bar,body.dim .strip{opacity:.28}body.dim .arch{opacity:.78}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;z-index:5}.sheet.on{display:flex}
+.pan{background:var(--bg);width:100%;max-width:520px;margin:0 auto;box-sizing:border-box;padding:22px 22px calc(22px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;max-height:88%;overflow-y:auto;border:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:1px solid var(--line);background:none;color:var(--fg);border-radius:99px;padding:6px 16px;font:inherit;cursor:pointer}.chip.s{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.tg{width:52px;height:30px;border-radius:99px;border:1px solid var(--line);background:var(--card);position:relative;cursor:pointer;flex:none}
+.tg:after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:var(--mut);transition:.3s}
+.tg[aria-checked=true]{background:var(--gold)}.tg[aria-checked=true]:after{inset-inline-start:25px;background:var(--bg)}
+textarea{width:100%;box-sizing:border-box;min-height:90px;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:14px;padding:12px;font:inherit}
+#done{align-items:center;justify-content:center;text-align:center}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#cs{position:fixed;inset:0;z-index:6;display:flex;align-items:flex-end;background:rgba(0,0,0,.6);visibility:hidden}#cs.on{visibility:visible}
+.pv{width:100%;border-radius:16px;background:#000;max-height:32vh;object-fit:cover;margin:8px 0}
+</style></head><body>
+
+<section class="v on" id="home"><div class="wrap">
+ <div class="row"><h1 style="font-size:2.3em;color:var(--gold)">سَنَد</h1><button class="btn" id="goS">الإعدادات</button></div>
+ <p class="m" style="margin-top:0">رفيقٌ هادئ يحفظ لكِ موضعكِ في الصلاة، لتخشعي دون عدٍّ ولا تذكّر.</p>
+ <div class="card" id="res" hidden><div id="resT"></div><div class="row"><button class="btn p" id="resGo">تابعي الصلاة</button><button class="btn" id="resNew">ابدئي من جديد</button></div></div>
+ <h3 style="margin-top:22px">اختاري الصلاة</h3>
+ <div class="grid" id="pg"></div>
+ <div class="card"><div class="row" style="margin-top:0"><span>صلاةٌ أخرى · عدد الركعات</span>
+  <span><button class="btn" id="mn" aria-label="أنقصي">−</button> <b id="cn" style="display:inline-block;min-width:2em;text-align:center;font:700 1.4em Amiri">٢</b> <button class="btn" id="pl" aria-label="زيدي">+</button></span></div>
+  <button class="btn p" id="cgo" style="width:100%">ابدئي</button></div>
+ <p class="m">سَنَد يحفظ موضعكِ فقط؛ لا يحكم على صلاتكِ ولا يُفتي. ولا يحتاج حسابًا ولا اتصالًا بالإنترنت.</p>
+</div></section>
+
+<section class="v" id="pray">
+ <div class="bar"><button class="btn" id="back">رجوع</button><span class="m" id="pn"></span><button class="btn p" id="fin">انتهيتُ</button></div>
+ <div class="strip" id="strip" aria-hidden="true"></div>
+ <div id="stage" role="button" tabindex="0" aria-label="المسي لتسجيل ما أتممتِه">
+  <div class="arch" id="arch"><div id="num"></div><div id="ord" aria-live="polite"></div></div>
+  <div class="dots" id="dots"><div class="dot"></div><div class="dot"></div></div>
+  <div class="dl m" id="dl"><span>السجدة ١</span><span>السجدة ٢</span></div>
+  <div id="cue"></div>
+ </div>
+ <div class="bar"><button class="btn" id="unsure">لستُ متأكدة</button><button class="btn" id="undo">تراجع خطوة</button></div>
+</section>
+
+<section class="v" id="set"><div class="wrap">
+ <div class="row"><h2>الإعدادات</h2><button class="btn p" id="setB">تمّ</button></div>
+ <div id="sg"></div>
+ <h3 style="margin-top:22px">ما أوصاني به عالمٌ أثق به</h3>
+ <p class="m">اسألي عالمًا تثقين به مرةً واحدة، خارج الصلاة، عمّا يخصّكِ في الشكّ وسجود السهو، ودوّني جوابه هنا بكلماته. سيظهر لكِ وقت الحاجة. السَّنَد لا يضع حكمًا من عنده.</p>
+ <textarea id="note" placeholder="اكتبي هنا ما أفتاكِ به العالم…"></textarea>
+ <h3 style="margin-top:22px">اعرفي موضعكِ دون نظر</h3>
+ <p class="m">أطيلي اللمس على الشاشة أثناء الصلاة فيهتزّ الجهاز: نبضات قصيرة بعدد رقم الركعة، ثم نبضات طويلة بعدد السجدات المسجَّلة. (قد لا يدعم جهازكِ الاهتزاز، كما في بعض أجهزة آيفون.)</p>
+</div></section>
+
+<section class="v" id="done"><div class="wrap">
+ <div class="arch" style="margin:0 auto 22px;background:radial-gradient(ellipse at 50% 40%,var(--glow),transparent 80%)"><div id="num" style="font-size:54px">✦</div></div>
+ <h2 style="font-size:2em;color:var(--gold)">تقبّل الله صلاتكِ</h2>
+ <div id="rf"><p class="m">إن شئتِ، اختاري كلمةً واحدة لما تشعرين به الآن. لا مراجعة ولا تدقيق في الأفعال.</p>
+ <div class="chips" style="justify-content:center"><button class="chip">سكينة</button><button class="chip">شرود</button><button class="chip">تعب</button><button class="chip">امتنان</button></div></div>
+ <button class="btn p" id="dn" style="margin-top:18px;min-width:140px">تمّ</button>
+</div></section>
+
+<div id="cs"><div class="pan">
+ <h3>العدّ بالكاميرا (تجريبي)</h3>
+ <p class="m">ضعي الهاتف على حامل أو على الأرض، على بُعد نحو مترين، بحيث يظهر جسمكِ كاملًا من الجانب. الصورة تُعالَج على جهازكِ فقط، ولا تُحفظ ولا تُرسل، وتختفي المعاينة حين تبدئين. الدقة أقل مع الثوب الفضفاض أو الإضاءة الخافتة، فهو مساعدٌ وليس حكمًا على صلاتكِ.</p>
+ <video id="cv" class="pv" playsinline muted></video>
+ <p id="cm" class="m" aria-live="polite"></p>
+ <div class="row"><button class="btn p" id="cgo2">ابدئي الصلاة</button><button class="btn" id="csw">بدّلي الكاميرا</button><button class="btn" id="cno">بدون كاميرا</button></div>
+</div></div>
+<div class="sheet" id="sheet"><div class="pan" id="pan"></div></div>
+
+<script>
+const $=s=>document.querySelector(s),AR='٠١٢٣٤٥٦٧٨٩',n2a=n=>String(n).replace(/\d/g,d=>AR[d]);
+const ORD=['الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة','الحادية عشرة','الثانية عشرة'];
+const PR=[['الفجر',2],['الظهر',4],['العصر',4],['المغرب',3],['العشاء',4]];
+const cnt=n=>n==1?'ركعة':n==2?'ركعتان':n<11?n2a(n)+' ركعات':n2a(n)+' ركعة';
+const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let cfg=Object.assign({cam:false,hap:true,dim:true,cue:true,big:false,g:2,zone:'all',theme:'auto',note:''},ld('cfg',{}));
+let st=ld('st',null),cn=2,last=0,dimT,wl=null;
+const vib=p=>{if(cfg.hap&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}};
+const show=id=>document.querySelectorAll('.v').forEach(v=>v.classList.toggle('on',v.id===id));
+function applyCfg(){document.documentElement.dataset.theme=cfg.theme=='auto'?'':cfg.theme;document.documentElement.style.setProperty('--fs',cfg.big?1.2:1);sv('cfg',cfg)}
+async function wake(on){try{if(on&&navigator.wakeLock&&!wl){wl=await navigator.wakeLock.request('screen');wl.onrelease=()=>wl=null}else if(!on&&wl){await wl.release();wl=null}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&st&&$('#pray').classList.contains('on'))wake(true)});
+
+/* home */
+function home(){
+ $('#pg').innerHTML='';
+ PR.forEach(([nm,n])=>{const b=document.createElement('button');b.className='pr';b.innerHTML='<b>'+nm+'</b><span class="m">'+cnt(n)+'</span>';b.onclick=()=>start(nm,n);$('#pg').append(b)});
+ $('#res').hidden=!st;
+ if(st){const r=Math.floor(st.i/st.g)+1;$('#resT').textContent='صلاة '+st.name+' قيد المتابعة، وموضعكِ المسجَّل: الركعة '+ORD[Math.min(r,st.n)-1]+'.'}
+ $('#cn').textContent=n2a(cn);show('home');wake(false);camStop();
+}
+function start(name,n){st={name,n,i:0,g:cfg.g};sv('st',st);enter()}
+function enter(){show('pray');wake(true);R();poke();if(cfg.cam&&!cam.on)camSetup()}
+$('#mn').onclick=()=>{cn=Math.max(1,cn-1);$('#cn').textContent=n2a(cn)};
+$('#pl').onclick=()=>{cn=Math.min(12,cn+1);$('#cn').textContent=n2a(cn)};
+$('#cgo').onclick=()=>start('نافلة',cn);
+$('#resGo').onclick=enter;
+$('#resNew').onclick=()=>{st=null;sv('st',null);home()};
+
+/* prayer rendering */
+function R(flash){
+ if(!st)return;const per=st.g,n=st.n,i=st.i,rr=Math.floor(i/per),ss=i%per;
+ let r=rr+1,s=ss;if(flash){r=rr;s=per}
+ $('#pn').textContent=st.name;$('#num').textContent=n2a(r);$('#ord').textContent='الركعة '+ORD[r-1];
+ const d=$('#dots');d.style.display=$('#dl').style.display=per==2?'flex':'none';
+ [...d.children].forEach((x,k)=>x.classList.toggle('f',k<s));
+ $('#strip').innerHTML=Array.from({length:n},(_,k)=>'<div class="mini'+(k<rr?' d':k==rr?' c':'')+'"></div>').join('');
+ let c='';
+ if(i==0)c='ابدئي بتكبيرة الإحرام، وبعد كل '+(per==2?'سجدة':'ركعة')+' المسي الشاشة لمسةً واحدة.';
+ else if(cfg.cue){
+  if(ss==0)c=(rr==2&&n>2?'بعد التشهّد الأول، ':'')+'قيامٌ إلى الركعة '+ORD[rr]+(per==1&&rr==n-1?'، ثم التشهّد الأخير والتسليم':'');
+  else c=rr==n-1?'السجدة الثانية، ثم التشهّد الأخير والتسليم':'جلسةٌ ثم السجدة الثانية';
+ }
+ $('#cue').textContent=c;
+}
+function arrive(){const a=$('#arch');a.classList.remove('arr');void a.offsetWidth;a.classList.add('arr')}
+function mark(auto){
+ const now=Date.now();if(!st||now-last<650)return;last=now;poke();if(!auto)cam.n=0;
+ st.i++;sv('st',st);
+ if(st.i>=st.n*st.g){vib([60,80,60]);return finish()}
+ const wrap=st.i%st.g==0;vib(wrap?60:30);
+ if(wrap){R(true);setTimeout(()=>{if(st){R();arrive()}},750)}else R();
+}
+function finish(){st=null;sv('st',null);wake(false);camStop();$('#rf').querySelectorAll('.chip').forEach(c=>c.classList.remove('s'));$('#rf').hidden=false;show('done')}
+$('#undo').onclick=()=>{if(st&&st.i>0){st.i--;cam.n=0;sv('st',st);R();poke()}};
+$('#fin').onclick=finish;
+$('#back').onclick=home;
+$('#dn').onclick=home;
+$('#rf').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{$('#rf').innerHTML='<p class="m">هذا يكفي. الحمد لله.</p>'});
+
+/* input: tap anywhere / long-press to feel position */
+let lp=0,lt;const stage=$('#stage');
+function poke(){document.body.classList.remove('dim');clearTimeout(dimT);if(cfg.dim)dimT=setTimeout(()=>document.body.classList.add('dim'),6000)}
+function pulse(){if(!st)return;const per=st.g,r=Math.floor(st.i/per)+1,s=st.i%per,p=[];
+ for(let k=0;k<r;k++)p.push(70,110);p[p.length-1]=450;for(let k=0;k<s;k++)p.push(220,150);vib(p)}
+stage.onpointerdown=()=>{poke();lp=0;lt=setTimeout(()=>{lp=1;pulse()},650)};
+stage.onpointerup=e=>{clearTimeout(lt);if(lp)return;if(cfg.zone=='low'&&e.clientY<innerHeight*.5)return;mark()};
+stage.onpointercancel=stage.onpointerleave=()=>clearTimeout(lt);
+stage.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();mark()}};
+stage.oncontextmenu=e=>e.preventDefault();
+document.addEventListener('pointerdown',()=>{if($('#pray').classList.contains('on'))poke()});
+
+/* uncertainty sheet: shows only the last marked position, never asks to verify */
+function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
+function openSheet(){
+ const per=st.g,r=Math.floor(st.i/per),s=st.i%per;let pr=r,ps=s;
+ const pan=$('#pan');
+ pan.innerHTML='<h3>لا بأس، خذي نفَسًا</h3><p>آخر موضعٍ سجّلتِه: <b>الركعة '+ORD[r]+'</b>'+(per==2?' — '+(s?'سجّلتِ سجدةً واحدة':'لم تسجّلي سجدةً بعد'):'')+'.</p><p class="m">هذا كل ما حفظتُه؛ لا أعلم إن كانت ذاكرتكِ أدقّ، ولا أحكم على صلاتكِ.'+(cam.on?' والعدّ بالكاميرا تقريبي وقد يُخطئ.':'')+'</p>'
+ +(cfg.note.trim()?'<div class="card"><div class="m">ما أوصاني به عالمٌ أثق به</div>'+esc(cfg.note).replace(/\n/g,'<br>')+'</div>':'<p class="m">يختلف أهل العلم بين المذاهب في حكم الشكّ في عدد الركعات وفي سجود السهو، ويذكر كثيرٌ منهم حكمًا خاصًّا لمن كثُر منه الشك. فاسألي عالمًا تثقين به مرةً واحدة خارج الصلاة، ودوّني جوابه في الإعدادات ليظهر هنا.</p>')
+ +'<div class="row"><button class="btn p" id="sOk">أكمل من هنا</button><button class="btn" id="sAdj">عدّلي موضعي</button></div><div id="adj"></div>';
+ $('#sheet').classList.add('on');
+ $('#sOk').onclick=()=>$('#sheet').classList.remove('on');
+ $('#sAdj').onclick=()=>{
+  const a=$('#adj');
+  const draw=()=>{a.innerHTML='<div class="m">الركعة</div><div class="chips" id="c1"></div>'+(per==2?'<div class="m">في هذه الركعة</div><div class="chips" id="c2"></div>':'')+'<button class="btn p" id="ap">اعتمدي هذا الموضع</button>';
+   for(let k=0;k<st.n;k++){const b=document.createElement('button');b.className='chip'+(k==pr?' s':'');b.textContent=n2a(k+1);b.onclick=()=>{pr=k;draw()};$('#c1').append(b)}
+   if(per==2)[['لم أسجد بعد',0],['سجدتُ سجدةً',1]].forEach(([t,v])=>{const b=document.createElement('button');b.className='chip'+(v==ps?' s':'');b.textContent=t;b.onclick=()=>{ps=v;draw()};$('#c2').append(b)});
+   $('#ap').onclick=()=>{st.i=pr*per+(per==2?ps:0);cam.n=0;sv('st',st);R();$('#sheet').classList.remove('on');poke()}};
+  draw()};
+}
+$('#unsure').onclick=()=>{if(st)openSheet()};
+$('#sheet').onclick=e=>{if(e.target.id=='sheet')$('#sheet').classList.remove('on')};
+
+/* settings */
+function drawSet(){
+ const g=$('#sg');g.innerHTML='';
+ [['hap','الاهتزاز الخفيف','نبضة لطيفة عند كل تسجيل'],['dim','الخفوت الهادئ','تخفت الأزرار بعد لحظات لتبقى العين على صلاتكِ'],['cue','تلميح الخطوة','سطرٌ صغير يذكّر بالخطوة التالية'],['cam','العدّ بالكاميرا (تجريبي)','يتعرّف على السجود من الجانب ويسجّله عنكِ. يحتاج إنترنت في أول مرة'],['big','خطٌّ أكبر','']].forEach(([k,t,d])=>{
+  const r=document.createElement('div');r.className='row';r.innerHTML='<div>'+t+(d?'<div class="m">'+d+'</div>':'')+'</div><button class="tg" role="switch" aria-label="'+t+'" aria-checked="'+cfg[k]+'"></button>';
+  r.querySelector('.tg').onclick=()=>{cfg[k]=!cfg[k];applyCfg();drawSet()};g.append(r)});
+ [['g','ما الذي تسجّلينه؟ (للصلوات القادمة)',[[2,'كل سجدة'],[1,'كل ركعة']]],['zone','موضع اللمس',[['all','الشاشة كلها'],['low','النصف السفلي']]],['theme','المظهر',[['auto','تلقائي'],['dark','داكن'],['light','فاتح']]]].forEach(([k,t,o])=>{
+  const r=document.createElement('div');r.innerHTML='<div style="margin-top:12px">'+t+'</div><div class="chips"></div>';
+  o.forEach(([v,l])=>{const b=document.createElement('button');b.className='chip'+(cfg[k]==v?' s':'');b.textContent=l;b.onclick=()=>{cfg[k]=v;applyCfg();drawSet()};r.querySelector('.chips').append(b)});g.append(r)});
+ $('#note').value=cfg.note;
+}
+$('#note').oninput=e=>{cfg.note=e.target.value;sv('cfg',cfg)};
+$('#goS').onclick=()=>{drawSet();show('set')};
+$('#setB').onclick=()=>st&&false?0:home();
+
+/* camera mode: on-device pose estimation (MediaPipe), side view. Detects sujood = head clearly below hips, then calls the same mark() as a tap */
+const cam={on:false,n:0,face:'user',lm:null,s:'u',a:0,b:0,stream:null,raf:0,t:0,ok:false,iv:0};
+const camMsg=t=>$('#cm').textContent=t,KP=[0,11,12,23,24];
+async function camInit(){
+ if(cam.lm)return;const V='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+ const M=await import(V+'/vision_bundle.mjs'),f=await M.FilesetResolver.forVisionTasks(V+'/wasm');
+ cam.lm=await M.PoseLandmarker.createFromOptions(f,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task'},runningMode:'VIDEO',numPoses:1});
+}
+async function camStream(){
+ if(cam.stream)cam.stream.getTracks().forEach(t=>t.stop());
+ const v=$('#cv');cam.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:cam.face,width:640,height:480},audio:false});
+ v.srcObject=cam.stream;await v.play();
+}
+function camLoop(){
+ cam.raf=requestAnimationFrame(camLoop);const v=$('#cv'),now=performance.now();
+ if(now-cam.t<100||v.readyState<2||!cam.lm)return;cam.t=now;
+ let p;try{p=cam.lm.detectForVideo(v,now).landmarks[0]}catch(e){return}
+ cam.ok=!!p&&KP.every(i=>p[i].visibility>.5);if(!cam.ok||!cam.on)return;
+ const mx=(a,b,k)=>(p[a][k]+p[b][k])/2,T=Math.hypot(mx(11,12,'x')-mx(23,24,'x'),mx(11,12,'y')-mx(23,24,'y'))||1,m=(p[0].y-mx(23,24,'y'))/T;
+ if(cam.s=='u'){if(m>.25){cam.a=cam.a||now;if(now-cam.a>300){cam.s='d';cam.a=cam.b=0;cam.n++;if(st&&(st.g==2||cam.n%2==0))mark(true)}}else cam.a=0}
+ else{if(m<.05){cam.b=cam.b||now;if(now-cam.b>300){cam.s='u';cam.a=cam.b=0}}else cam.b=0}
+}
+async function camSetup(){
+ $('#cs').classList.add('on');camMsg('جارٍ تهيئة الكاميرا… (أول مرة تحتاج إنترنت)');cam.on=false;
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){camMsg('المتصفح يمنع الكاميرا في هذا النوع من الصفحات. افتحي الصفحة عبر رابط https أو عبر localhost. يمكنكِ المتابعة باللمس.');return}
+ let step='m';
+ try{await camInit();step='c';await camStream();cancelAnimationFrame(cam.raf);camLoop();clearInterval(cam.iv);
+  cam.iv=setInterval(()=>camMsg(cam.ok?'أراكِ بوضوح ✓':'لا يظهر جسمكِ كاملًا من الجانب بعد؛ حرّكي الهاتف أو ابتعدي قليلًا'),500)}
+ catch(e){const n=e&&e.name||'',d=' ('+n+(e&&e.message?': '+String(e.message).slice(0,90):'')+')';
+  camMsg((step=='m'?'تعذّر تحميل نموذج التعرّف؛ تأكدي من الإنترنت ومن أن المتصفح لا يحجب cdn.jsdelivr.net وstorage.googleapis.com.':n=='NotAllowedError'?'لم يُسمح باستخدام الكاميرا. اسمحي بها من أيقونة القفل بجانب العنوان ثم أعيدي المحاولة.':n=='NotFoundError'?'لم أجد كاميرا في هذا الجهاز.':n=='NotReadableError'?'الكاميرا مستخدمة في تطبيق آخر.':'تعذّر تشغيل الكاميرا.')+d+' يمكنكِ المتابعة باللمس.')}
+}
+function camStop(){cancelAnimationFrame(cam.raf);clearInterval(cam.iv);cam.on=false;cam.n=0;if(cam.stream){cam.stream.getTracks().forEach(t=>t.stop());cam.stream=null}$('#cs').classList.remove('on')}
+$('#cgo2').onclick=()=>{if(!cam.stream)return;cam.on=true;cam.s='u';cam.n=0;clearInterval(cam.iv);$('#cs').classList.remove('on')};
+$('#cno').onclick=camStop;
+$('#csw').onclick=async()=>{cam.face=cam.face=='user'?'environment':'user';try{await camStream()}catch(e){camMsg('تعذّر تبديل الكاميرا')}};
+
+applyCfg();
+home();
+</script></body></html>
